@@ -6,8 +6,10 @@ import Meta from "./meta";
 const Article = ({ link, title, summary, ...rest }) => {
   return (
     <a
-      href={link}
       className="list-group-item list-group-item-action flex-column align-items-start"
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
     >
       <Title title={title} />
       <Summary summary={summary} />

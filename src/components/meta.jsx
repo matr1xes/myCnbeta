@@ -9,15 +9,14 @@ const Meta = ({ type, creator, date }) => {
     return time;
   }
 
+  function upperCase(string) {
+    return string.toLowerCase().replace(/( |^)[a-z]/g, L => L.toUpperCase());
+  }
+
   return (
     <React.Fragment>
-      <div className="d-inline-flex" style={{ float: "left" }}>
-        {type}
-      </div>
-      <div
-        className="d-inline-flex"
-        style={{ float: "right", color: "#7b91a4" }}
-      >
+      <div className="d-inline-flex type">{upperCase(type)}</div>
+      <div className="d-inline-flex meta">
         {creator} @ {getTime(date)}
       </div>
     </React.Fragment>

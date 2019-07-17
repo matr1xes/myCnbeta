@@ -1,31 +1,42 @@
 import React, { Component } from "react";
 import Article from "./article";
+import Header from "./header";
+import Pagination from "./common/pagination";
 import http from "../sevices/httpService";
+import { paginate } from "../utils/paginate";
 
 class Container extends Component {
   state = {
-    data: []
+    data: [],
+    pageSize: 20,
+    currentPage: 1
   };
 
   async componentDidMount() {
     const { data } = await http.get("articles");
-    this.setState({ data });
+    const newState = { ...this.state };
+    newState.data = data;
+    this.setState({ ...newState });
   }
+
+  handlePageChange = page => {
+    this.setState({ currentPage: page });
+  };
+
+  showData = () => {
+    const { data, pageSize, currentPage } = this.state;
+    const showData = paginate(data, currentPage, pageSize);
+    const itemsCount = data.length;
+    return { currentPage, pageSize, data: showData, itemsCount };
+  };
+
   render() {
+    const { data, currentPage, pageSize, itemsCount } = this.showData();
     return (
-      <div className="container">
-        <h2 style={{ textAlign: "left", margin: "30px 0 30px 0" }}>
-          <img
-            src="https://www.cnbeta.com/images/logo_1.png"
-            alt=""
-            style={{
-              width: "150px"
-            }}
-          />
-          中文业界资讯站
-        </h2>
+      <div className="container col-md-7">
+        <Header />
         <div className="list-group">
-          {this.state.data.map(item => (
+          {data.map(item => (
             <Article
               key={item._id}
               id={item.id}
@@ -37,6 +48,12 @@ class Container extends Component {
               creator={item.creator}
             />
           ))}
+          <Pagination
+            itemsCount={itemsCount}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onPageChange={this.handlePageChange}
+          />
         </div>
       </div>
     );
